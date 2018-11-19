@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<hibernate-mapping xmlns="urn:nhibernate-mapping-2.2"
+    namespace="EM.Elsukov.DB" assembly="EM.Elsukov.DB">
+
+  <class name="Note" table="Notes">
+
+    <id name="Id"><generator class="native" /></id>
+    <property name="Title" />
+    <property name="Text" />
+    <property name="IsPublished" />
+    <property name="Tags" />
+    <property name="CreateDate" />
+    <property name="UserId" />
+    <property name="BinaryFile" />
+    <property name="Status" />
+    
+  </class>
+
+</hibernate-mapping>

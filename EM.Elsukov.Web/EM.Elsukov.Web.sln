@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.28010.2048
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EM.Elsukov.Web", "EM.Elsukov.Web\EM.Elsukov.Web.csproj", "{5C8DAE40-D2E2-46E3-A7D4-045A4D323269}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EM.Elsukov.DB", "EM.Elsukov.DB\EM.Elsukov.DB.csproj", "{6701C203-736B-4406-9CBD-30C6BBEC158C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +17,10 @@ Global
 		{5C8DAE40-D2E2-46E3-A7D4-045A4D323269}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5C8DAE40-D2E2-46E3-A7D4-045A4D323269}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5C8DAE40-D2E2-46E3-A7D4-045A4D323269}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6701C203-736B-4406-9CBD-30C6BBEC158C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6701C203-736B-4406-9CBD-30C6BBEC158C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6701C203-736B-4406-9CBD-30C6BBEC158C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6701C203-736B-4406-9CBD-30C6BBEC158C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
