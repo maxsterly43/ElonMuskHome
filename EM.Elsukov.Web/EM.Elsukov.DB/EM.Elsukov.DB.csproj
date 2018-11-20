@@ -67,10 +67,12 @@
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\Note.cs" />
     <Compile Include="Models\User.cs" />
+    <Compile Include="NHibernate\Interfaces\INoteRepository.cs" />
     <Compile Include="NHibernate\Interfaces\IUserRepository.cs" />
     <Compile Include="NHibernate\NHBaseRepository.cs" />
     <Compile Include="NHibernate\NHHelper.cs" />
-    <Compile Include="NHibernate\NHUserRepository.cs" />
+    <Compile Include="NHibernate\Repository\NHNoteRepository.cs" />
+    <Compile Include="NHibernate\Repository\NHUserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="NHibernate\Interfaces\IEntityRepository.cs" />
   </ItemGroup>
@@ -78,7 +80,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="hibernate.cfg.xml" />
+    <Content Include="hibernate.cfg.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Mapping\Note.hbm.xml" />
     <Content Include="Mapping\User.hbm.xml" />
   </ItemGroup>

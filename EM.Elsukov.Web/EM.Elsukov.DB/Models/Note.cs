@@ -12,16 +12,18 @@ namespace EM.Elsukov.DB.Models
 
         public virtual string Tags { get; set; }
 
-        public virtual DateTime CreateDtae { get; set; }
+        public virtual DateTime CreateDate { get; set; }
 
-        public virtual long UserId { get; set; }
+        public virtual User User { get; set; }
 
-        public virtual NoteStatus Status { get; set; }
+        public virtual byte[] BinaryFile { get; set; }
+
+        public virtual int Status { get; set; }
     }
     public enum NoteStatus
     {
         PUBLISHED,
         Draft,
-        DELETED,
+        DELETED
     }
 }

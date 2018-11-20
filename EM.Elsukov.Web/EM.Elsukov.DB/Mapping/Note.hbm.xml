@@ -7,10 +7,9 @@
     <id name="Id"><generator class="native" /></id>
     <property name="Title" />
     <property name="Text" />
-    <property name="IsPublished" />
     <property name="Tags" />
     <property name="CreateDate" />
-    <property name="UserId" />
+    <many-to-one name="User" column="UserId" lazy="false"/>
     <property name="BinaryFile" />
     <property name="Status" />
     
