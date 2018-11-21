@@ -18,7 +18,7 @@ namespace EM.Elsukov.DB.Models
 
         public virtual byte[] BinaryFile { get; set; }
 
-        public virtual int Status { get; set; }
+        public virtual NoteStatus Status { get; set; }
     }
     public enum NoteStatus
     {

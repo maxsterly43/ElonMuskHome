@@ -80,11 +80,11 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="hibernate.cfg.xml">
+    <EmbeddedResource Include="hibernate.cfg.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Mapping\Note.hbm.xml" />
-    <Content Include="Mapping\User.hbm.xml" />
+    </EmbeddedResource>
+    <EmbeddedResource Include="Mapping\Note.hbm.xml" />
+    <EmbeddedResource Include="Mapping\User.hbm.xml" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

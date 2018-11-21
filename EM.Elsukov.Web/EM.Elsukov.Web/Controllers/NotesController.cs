@@ -1,4 +1,5 @@
-﻿using EM.Elsukov.DB.NHibernate;
+﻿using EM.Elsukov.DB.Models;
+using EM.Elsukov.DB.NHibernate;
 using EM.Elsukov.DB.NHibernate.Interfaces;
 using System;
 using System.Collections.Generic;
@@ -10,17 +11,17 @@ namespace EM.Elsukov.Web.Controllers
 {
     public class NotesController : Controller
     {
-        NHNoteRepository notes;
-        NHUserRepository users;
+        NHNoteRepository notesRep;
+        IEnumerable<Note> notes;
         public NotesController()
         {
-            notes = new NHNoteRepository();
-            users = new NHUserRepository();
+            notesRep = new NHNoteRepository();
         }
         [HttpGet]
         public ActionResult AllNotes()
         {
-            return View(notes.GetAll());
+            notes = notesRep.GetAll();
+            return View(notes);
         }
     }
 }

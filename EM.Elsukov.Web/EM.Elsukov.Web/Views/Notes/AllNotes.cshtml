@@ -6,72 +6,27 @@
 
 <h2>AllNotes</h2>
 
-<p>
-    @Html.ActionLink("Create New", "Create")
-</p>
-<table class="table">
-    <tr>
-        <th>
-            @Html.DisplayNameFor(model => model.Title)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Text)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.Tags)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.CreateDate)
-        </th>
-        <th>
-            @Html.DisplayNameFor(model => model.User)
-        </th>
-        <th></th>
-    </tr>
-
+<div class="notes">
     @foreach (var item in Model)
     {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Title)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Text)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Tags)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CreateDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.User)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
-                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
-                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
-            </td>
-        </tr>
-    }
-
-</table>
-
-@*<div class="col-sm-3">
-    <div href="#" class="thumbnail panel panel-info">
-        <div class="caption">
-            <h4 class="media-heading">Заголовок заметки</h4>
-
-            <div class="tags">
-                <span class="label label-info">Tag #1</span>
-                <span class="label label-info">Tag #2</span>
-                <span class="label label-info">Tag #3</span>
+        <div class="note">
+            <div class="note-header">
+                <span class="note-attachment glyphicon glyphicon-paperclip"></span>
+                <div class="note-title">@Html.DisplayFor(modelItem => item.Title)</div>
             </div>
-            <div class="row">
-                <span class="col-sm-6 text-center">27.11.2018</span>
-                <span class="col-sm-6 text-center" href="#">Admin</span>
+            <div class="note-labels">
+                @{
+                    var tags = item.Tags.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var tag in tags)
+                    {
+                        <span class="label label-info">@tag</span>
+                    }
+                }
+            </div>
+            <div class="note-info">
+                <span class="text-center">@item.CreateDate.ToShortDateString()</span>
+                @Html.ActionLink(item.User.Login, "null", null, new { @class = "text-center" })
             </div>
         </div>
-    </div>
-</div>*@
-
+                    }
+</div>

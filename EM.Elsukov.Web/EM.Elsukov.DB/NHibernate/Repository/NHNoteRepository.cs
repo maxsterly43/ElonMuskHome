@@ -12,7 +12,7 @@ namespace EM.Elsukov.DB.NHibernate
         {
             if (note != null)
             {
-                note.Status = (int)NoteStatus.DELETED;
+                note.Status = NoteStatus.DELETED;
                 Save(note);
             }
         }

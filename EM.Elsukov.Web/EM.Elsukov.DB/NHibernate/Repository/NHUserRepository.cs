@@ -9,7 +9,7 @@ namespace EM.Elsukov.DB.NHibernate
         {
             if (user != null)
             {
-                user.Status = (int)UserStatus.DELETED;
+                user.Status = UserStatus.DELETED;
                 Save(user);
             }
         }

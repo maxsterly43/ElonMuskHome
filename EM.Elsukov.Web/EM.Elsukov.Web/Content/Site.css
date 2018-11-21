@@ -1,6 +1,7 @@
 ﻿body {
     padding-top: 50px;
     padding-bottom: 20px;
+    background-color: #fafafa;
 }
 
 /* Set padding to keep content from hitting the edges */
@@ -15,6 +16,59 @@
 .dl-horizontal dt {
     white-space: normal;
 }
+
+
+.notes {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.note {
+    flex-direction: column;
+    display: flex;
+    width: calc(25% - 20px);
+    background-color: #fff;
+    box-shadow: 1px 1px 6px #00000050;
+    border-radius: 4px;
+    margin: 10px;
+    min-width: 200px;
+}
+
+
+.note-title {
+    padding: 5px 10px;
+    word-wrap: break-word;
+}
+
+.note-labels {
+    padding: 10px;
+}
+
+.note-info {
+    display: flex;
+    background-color: #f5f5f5;
+    border-top: 1px solid #eee;
+}
+
+    .note-info * {
+        flex: 1;
+        padding: 4px;
+    }
+
+.note-attachment {
+    float: right;
+    background-color: #f5f5f5;
+    margin-right: 5px;
+    margin-top: 5px;
+    padding: 5px 5px;
+    border-radius: 4px;
+}
+
+.note-header {
+    flex: 1;
+}
+
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,
