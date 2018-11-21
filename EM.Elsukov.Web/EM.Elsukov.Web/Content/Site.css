@@ -70,6 +70,12 @@
     flex: 1;
 }
 
+.adv-search {
+    display: inline-block;
+    width: 500px;
+    margin-top:20px;
+}
+
 
 /* Set width on the form input elements since they're 100% wide by default */
 input,

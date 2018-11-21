@@ -1,40 +1,38 @@
-﻿@model IEnumerable<EM.Elsukov.DB.Models.Note>
+﻿@model EM.Elsukov.Web.Models.SearchModel
 
 @{
     ViewBag.Title = "AllNotes";
 }
 
-<div class="row">
-    @using (@Html.BeginForm("AllNotes", "Notes", FormMethod.Get, new { @class = "navbar-form navbar-left", @role = "search" }))
+<div align="center" class="row">
+
+    @using (@Html.BeginForm("AllNotes", "Notes", FormMethod.Post, new { id = "searchForm" }))
     {
-        <div class="form-group">
-            <input name="search" type="text" class="form-control" placeholder="Search">
+        @Html.AntiForgeryToken();
+        @Html.TextBoxFor(m => m.search, new { @class = "form-control adv-search", @placeholder = "Поиск" })
+        <button type="button" onclick="AsyncGetNotes()" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+        <div class="row">
+            <button class="btn btn-default filter-button" data-filter="all">По дате</button>
+            <button class="btn btn-default filter-button" data-filter="hdpe">По названию</button>
+            <button class="btn btn-default filter-button" data-filter="sprinkle">По автору</button>
         </div>
-        <button type="submit" class="btn btn-default">Submit</button>
     }
+
+    <div id="getNotes">
+    </div>
+
 </div>
 
-<div class="notes">
-    @foreach (var item in Model)
-    {
-        <div class="note">
-            <div class="note-header">
-                @Html.ActionLink(" ", "null", null, new { @class = "note-attachment glyphicon glyphicon-paperclip" })
-                <div class="note-title">@Html.DisplayFor(modelItem => item.Title)</div>
-            </div>
-            <div class="note-labels">
-                @{
-                    var tags = item.Tags.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                    foreach (var tag in tags)
-                    {
-                        <span class="label label-info">@tag</span>
-                    }
-                }
-            </div>
-            <div class="note-info">
-                <span class="text-center">@item.CreateDate.ToString("dd/MM/yy hh:mm")</span>
-                @Html.ActionLink(item.User.Login, "null", null, new { @class = "text-center" })
-            </div>
-        </div>
-                    }
-</div>
+<script>
+    function AsyncGetNotes() {
+        $.ajax({
+            url: '@Url.Action("AllNotes", "Notes")',
+            type: 'POST',
+            cache: false,
+            data: $("#searchForm").serializeArray(),
+            success: function (result) {
+                $("#getNotes").html(result)
+            }
+        });
+    }
+</script>

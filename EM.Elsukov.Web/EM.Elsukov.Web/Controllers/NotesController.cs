@@ -1,6 +1,7 @@
 ﻿using EM.Elsukov.DB.Models;
 using EM.Elsukov.DB.NHibernate;
 using EM.Elsukov.DB.NHibernate.Interfaces;
+using EM.Elsukov.Web.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,11 +19,18 @@ namespace EM.Elsukov.Web.Controllers
             notesRep = new NHNoteRepository();
         }
         [HttpGet]
-        public ActionResult AllNotes(string search)
+        public ActionResult AllNotes()
         {
-            string s = search;
-            IEnumerable<Note> notes = notesRep.GetAll();
-            return View(notes);
+            var m = new SearchModel();
+            return View(m);
+        }
+        [HttpPost]
+        public ActionResult AllNotes(SearchModel searchModel)
+        {
+            string search = searchModel.search;
+            string sortBy = searchModel.sortBy;
+            IEnumerable<Note> notes = notesRep.LoadByUserLogin(search);
+            return PartialView("NoteList", notes);
         }
         [HttpGet]
         public ActionResult MyNotes()
