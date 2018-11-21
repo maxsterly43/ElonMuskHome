@@ -1,7 +1,7 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title – приложение ASP.NET</title>
@@ -17,13 +17,27 @@
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
-                @Html.ActionLink("Все заметки", "AllNotes", "Notes", new { area = "" }, new { @class = "navbar-brand" })
+                @Html.Label("Заметки", new { @class = "navbar-brand" })
             </div>
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Мои заметки", "AllNotes", "Notes")</li>
+            @if (User.Identity.IsAuthenticated)
+            {
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>@Html.ActionLink("Все заметки", "AllNotes", "Notes")</li>
+                        <li>@Html.ActionLink("Мои заметки", "MyNotes", "Notes")</li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="@Url.Action("AllNotes", "Notes")"><span class="glyphicon glyphicon-user"></span> @User.Identity.Name</a></li>
+                        <li><a href="@Url.Action("Logoff", "Account")"><span class="glyphicon glyphicon-log-out"></span> Выйти</a></li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <ul class="nav navbar-nav navbar-right">
+                    <li><a href="@Url.Action("LogIn", "Account")"><span class="glyphicon glyphicon-log-in"></span> Войти</a></li>
                 </ul>
-            </div>
+            }
         </div>
     </div>
     <div class="container body-content">

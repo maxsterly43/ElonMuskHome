@@ -2,15 +2,12 @@
 using EM.Elsukov.DB.NHibernate;
 using EM.Elsukov.DB.NHibernate.Interfaces;
 using EM.Elsukov.Web.Models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Security;
 
 namespace EM.Elsukov.Web.Controllers
 {
+    [Authorize]
     public class AccountController : Controller
     {
         IUserRepository users;
@@ -18,17 +15,22 @@ namespace EM.Elsukov.Web.Controllers
         {
             users = new NHUserRepository();
         }
+        [AllowAnonymous]
         [HttpGet]
         public ActionResult Login()
         {
-            return View();
+            if (!User.Identity.IsAuthenticated)
+                return View();
+            else
+                return RedirectToAction("AllNotes", "Notes");
         }
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult Login(LoginModel loginModel)
         {
             if (!ModelState.IsValid)
             {
-                ModelState.AddModelError("", "ololol error");
+                ModelState.AddModelError("", "Некорректный ввод");
                 return View(loginModel);
             }
             else
@@ -40,10 +42,15 @@ namespace EM.Elsukov.Web.Controllers
                     ModelState.AddModelError("", "Неверный логин или пароль");
                     return View(loginModel);
                 }
-
                 FormsAuthentication.SetAuthCookie(user.Login, false);
             }
-            return View(loginModel);
+            return RedirectToAction("AllNotes", "Notes");
+        }
+        [HttpGet]
+        public ActionResult Logoff()
+        {
+            FormsAuthentication.SignOut();
+            return RedirectToAction("Login", "Account");
         }
     }
 }

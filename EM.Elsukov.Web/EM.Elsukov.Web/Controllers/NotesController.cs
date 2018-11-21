@@ -9,19 +9,26 @@ using System.Web.Mvc;
 
 namespace EM.Elsukov.Web.Controllers
 {
+    [Authorize]
     public class NotesController : Controller
     {
         NHNoteRepository notesRep;
-        IEnumerable<Note> notes;
         public NotesController()
         {
             notesRep = new NHNoteRepository();
         }
         [HttpGet]
-        public ActionResult AllNotes()
+        public ActionResult AllNotes(string search)
         {
-            notes = notesRep.GetAll();
+            string s = search;
+            IEnumerable<Note> notes = notesRep.GetAll();
             return View(notes);
+        }
+        [HttpGet]
+        public ActionResult MyNotes()
+        {
+            IEnumerable<Note> notes = notesRep.LoadByUserLogin(User.Identity.Name);
+            return View("AllNotes", notes);
         }
     }
 }
