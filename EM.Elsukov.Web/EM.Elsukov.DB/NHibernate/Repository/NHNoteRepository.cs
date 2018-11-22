@@ -60,5 +60,26 @@ namespace EM.Elsukov.DB.NHibernate
 
             return entity;
         }
+
+        public IEnumerable<Note> LoadLike(string search, string sort)
+        {
+            var session = NHibernateHelper.GetCurrentSession();
+
+            var notes = session.QueryOver<Note>()
+                .Where(t => t.Title.IsLike(search, MatchMode.Anywhere)
+                || t.Tags.IsLike(search, MatchMode.Anywhere)
+                ).OrderBy(Projections.Property(sort)).Desc
+                .List();
+
+
+            NHibernateHelper.CloseSession();
+
+            return notes;
+        }
+
+        public void SaveByProc(Note note)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

@@ -5,10 +5,14 @@ namespace EM.Elsukov.DB.NHibernate.Interfaces
 {
     public interface INoteRepository
     {
-        Note LoadByTitle(string name);
-
         IEnumerable<Note> LoadBySorted(string filed);
 
         IEnumerable<Note> LoadByUserLogin(string login, string filedSort);
+
+        IEnumerable<Note> LoadLike(string search, string sort);
+
+        void SaveByProc(Note note);
+
+        Note LoadByTitle(string title);
     }
 }

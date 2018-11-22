@@ -4,6 +4,6 @@ namespace EM.Elsukov.DB.NHibernate.Interfaces
 {
     public interface IUserRepository
     {
-        User LoadByName(string name);
+        User LoadByLogin(string login);
     }
 }

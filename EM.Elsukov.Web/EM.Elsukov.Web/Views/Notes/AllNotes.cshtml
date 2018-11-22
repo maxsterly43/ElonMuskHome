@@ -2,25 +2,33 @@
 
 @{
     ViewBag.Title = "AllNotes";
+
+    var listSorted = new List<SelectListItem>()
+    {
+        new SelectListItem() { Text = "Сортировать", Value = null, Selected = true },
+        new SelectListItem() { Text = "По названию", Value = "Title" },
+        new SelectListItem() { Text = "По авторам", Value = "Author" },
+        new SelectListItem() { Text = "По Дате", Value = "CreateDate" }
+    };
 }
 
-<div align="center" class="row">
-
+<div class="row">
     @using (@Html.BeginForm("AllNotes", "Notes", FormMethod.Post, new { id = "searchForm" }))
     {
         @Html.AntiForgeryToken();
-        @Html.TextBoxFor(m => m.search, new { @class = "form-control adv-search", @placeholder = "Поиск" })
-        <button type="button" onclick="AsyncGetNotes()" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-        <div class="row">
-            <button class="btn btn-default filter-button" data-filter="all">По дате</button>
-            <button class="btn btn-default filter-button" data-filter="hdpe">По названию</button>
-            <button class="btn btn-default filter-button" data-filter="sprinkle">По автору</button>
+
+        <div class="input-group" id="adv-search">
+            @Html.TextBoxFor(m => m.search, new { @class = "form-control", @placeholder = "Поиск", @oninput = "AsyncGetNotes()" })
+            <div class="input-group-btn">
+                <div class="btn-group" role="group">
+                    @Html.DropDownListFor(x => x.sortBy, listSorted, new { @class = "btn btn-default", @onchange = "AsyncGetNotes()" })
+                    <button type="button" onclick="AsyncGetNotes()" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+                </div>
+
+            </div>
         </div>
     }
-
-    <div id="getNotes">
-    </div>
-
+    <div id="getNotes"></div>
 </div>
 
 <script>

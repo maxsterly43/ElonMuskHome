@@ -1,5 +1,8 @@
 ﻿@model IEnumerable<EM.Elsukov.DB.Models.Note>
 
+@{
+    Layout = null;
+}
 <div class="notes">
     @foreach (var item in Model)
     {
@@ -22,5 +25,8 @@
                 @Html.ActionLink(item.User.Login, "null", null, new { @class = "text-center" })
             </div>
         </div>
-    }
+        <script>
+            $(".note:hidden:last").css("display", "flex").hide().fadeIn("slow");
+        </script>
+      }
 </div>

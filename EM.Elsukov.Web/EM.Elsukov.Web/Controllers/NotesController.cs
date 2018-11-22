@@ -27,9 +27,7 @@ namespace EM.Elsukov.Web.Controllers
         [HttpPost]
         public ActionResult AllNotes(SearchModel searchModel)
         {
-            string search = searchModel.search;
-            string sortBy = searchModel.sortBy;
-            IEnumerable<Note> notes = notesRep.LoadByUserLogin(search);
+            IEnumerable<Note> notes = notesRep.LoadLike(searchModel.search, searchModel.sortBy);
             return PartialView("NoteList", notes);
         }
         [HttpGet]

@@ -22,8 +22,8 @@ namespace EM.Elsukov.DB.Models
     }
     public enum NoteStatus
     {
+        DELETED,
         PUBLISHED,
-        Draft,
-        DELETED
+        Draft
     }
 }

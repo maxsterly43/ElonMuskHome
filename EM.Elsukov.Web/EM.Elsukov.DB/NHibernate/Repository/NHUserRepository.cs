@@ -14,12 +14,12 @@ namespace EM.Elsukov.DB.NHibernate
             }
         }
 
-        public User LoadByName(string name)
+        public User LoadByLogin(string login)
         {
             var session = NHibernateHelper.GetCurrentSession();
 
             var entity = session.QueryOver<User>()
-                .And(u => u.Login == name)
+                .And(u => u.Login == login)
                 .SingleOrDefault();
 
             NHibernateHelper.CloseSession();
