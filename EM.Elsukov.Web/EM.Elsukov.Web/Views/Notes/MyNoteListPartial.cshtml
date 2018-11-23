@@ -1,0 +1,54 @@
+﻿@model IEnumerable<EM.Elsukov.DB.Models.Note>
+
+@{
+    Layout = null;
+}
+<div id="modDialog" class="modal fade">
+    <div id="dialogContent" class="modal-dialog"></div>
+</div>
+<div class="notes">
+    @foreach (var item in Model)
+    {
+        <div class="note">
+            <div class="note-header">
+                @Html.ActionLink(" ", "null", null, new { @class = "note-attachment glyphicon glyphicon-paperclip" })
+                <div class="note-title">@Html.DisplayFor(modelItem => item.Title)</div>
+            </div>
+            <div class="note-labels">
+                @{
+                    var tags = item.Tags.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var tag in tags)
+                    {
+                        <span class="label label-info">@tag</span>
+                    }
+                }
+            </div>
+            <div class="note-info">
+                <span class="text-center">@item.CreateDate.ToString("dd/MM/yy hh:mm")</span>
+                @Html.ActionLink("Изменить", "EditNotePatrial", new { id = item.Id }, new { @class = "text-right", @id = "editNote" })
+                @Html.ActionLink("Удалить", "null", null, new { @class = "text-left" })
+            </div>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+
+    $("#getNotes").hide();
+    $(".note").hide();
+    $(".note").fadeIn(600);
+    $("#getNotes").show(225);
+
+    $(function () {
+        $.ajaxSetup({ cache: false });
+        $("#editNote").click(function (e) {
+
+            e.preventDefault();
+            $.get(this.href, function (data) {
+                $('#dialogContent').html(data);
+                $('#modDialog').modal('show');
+            });
+        });
+    })
+
+</script>

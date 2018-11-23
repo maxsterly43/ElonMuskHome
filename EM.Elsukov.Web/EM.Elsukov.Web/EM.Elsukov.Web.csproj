@@ -186,7 +186,11 @@
     <Content Include="Views\Web.config" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Notes\AllNotes.cshtml" />
-    <Content Include="Views\Notes\NoteList.cshtml" />
+    <Content Include="Views\Notes\MyNoteListPartial.cshtml" />
+    <Content Include="Views\Notes\SearchPartial.cshtml" />
+    <Content Include="Views\Notes\MyNotes.cshtml" />
+    <Content Include="Views\Notes\AllNoteListPartial.cshtml" />
+    <Content Include="Views\Notes\EditNotePatrial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

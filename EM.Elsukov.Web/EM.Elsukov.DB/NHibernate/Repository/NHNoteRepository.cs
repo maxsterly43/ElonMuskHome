@@ -31,20 +31,7 @@ namespace EM.Elsukov.DB.NHibernate
             return entities;
         }
 
-        public Note LoadByTitle(string title)
-        {
-            var session = NHibernateHelper.GetCurrentSession();
-
-            var entity = session.QueryOver<Note>()
-                .And(u => u.Title == title)
-                .SingleOrDefault();
-
-            NHibernateHelper.CloseSession();
-
-            return entity;
-        }
-
-        public IEnumerable<Note> LoadByUserLogin(string login, string filedSort = "CreateDate")
+        public IEnumerable<Note> LoadByUser(string login, string filedSort)
         {
             var session = NHibernateHelper.GetCurrentSession();
 
@@ -60,26 +47,60 @@ namespace EM.Elsukov.DB.NHibernate
 
             return entity;
         }
-
-        public IEnumerable<Note> LoadLike(string search, string sort)
+        public IEnumerable<Note> LoadLikeByUser(string login, string search, string sort)
         {
             var session = NHibernateHelper.GetCurrentSession();
 
-            var notes = session.QueryOver<Note>()
-                .Where(t => t.Title.IsLike(search, MatchMode.Anywhere)
-                || t.Tags.IsLike(search, MatchMode.Anywhere)
-                ).OrderBy(Projections.Property(sort)).Desc
-                .List();
+            var user = session.QueryOver<User>()
+              .And(u => u.Login == login)
+              .SingleOrDefault();
 
+            var notes = session.QueryOver<Note>()
+                .Where(l => l.User == user)
+                .Where(t => t.Title.IsLike(search, MatchMode.Anywhere) || t.Tags.IsLike(search, MatchMode.Anywhere))
+                .OrderBy(Projections.Property(sort))
+                .Desc
+                .List();
 
             NHibernateHelper.CloseSession();
 
             return notes;
         }
 
+        public IEnumerable<Note> LoadLike(string search, string sort)
+        {
+            var session = NHibernateHelper.GetCurrentSession();
+
+            var notes = session.QueryOver<Note>()
+                .Where(p => p.Status == NoteStatus.PUBLISHED)
+                .Where(t => t.Title.IsLike(search, MatchMode.Anywhere) || t.Tags.IsLike(search, MatchMode.Anywhere))
+                .OrderBy(Projections.Property(sort))
+                .Desc
+                .List();
+
+            NHibernateHelper.CloseSession();
+
+            return notes;
+        }
+        public Note LoadById(long id)
+        {
+            var session = NHibernateHelper.GetCurrentSession();
+
+            var entity = session.QueryOver<Note>()
+                .And(u => u.Id == id)
+                .SingleOrDefault();
+
+            NHibernateHelper.CloseSession();
+
+            return entity;
+        }
+
         public void SaveByProc(Note note)
         {
-            throw new NotImplementedException();
+            if (note != null)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

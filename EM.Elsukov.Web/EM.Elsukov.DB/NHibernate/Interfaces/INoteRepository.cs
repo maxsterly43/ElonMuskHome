@@ -7,12 +7,14 @@ namespace EM.Elsukov.DB.NHibernate.Interfaces
     {
         IEnumerable<Note> LoadBySorted(string filed);
 
-        IEnumerable<Note> LoadByUserLogin(string login, string filedSort);
+        IEnumerable<Note> LoadByUser(string login, string filedSort);
 
         IEnumerable<Note> LoadLike(string search, string sort);
 
-        void SaveByProc(Note note);
+        IEnumerable<Note> LoadLikeByUser(string login, string search, string sort);
 
-        Note LoadByTitle(string title);
+        Note LoadById(long id);
+
+        void SaveByProc(Note note);
     }
 }

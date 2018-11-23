@@ -1,40 +1,19 @@
-﻿@model EM.Elsukov.Web.Models.SearchModel
-
-@{
+﻿@{
     ViewBag.Title = "AllNotes";
-
-    var listSorted = new List<SelectListItem>()
-    {
-        new SelectListItem() { Text = "Сортировать", Value = null, Selected = true },
-        new SelectListItem() { Text = "По названию", Value = "Title" },
-        new SelectListItem() { Text = "По авторам", Value = "Author" },
-        new SelectListItem() { Text = "По Дате", Value = "CreateDate" }
-    };
 }
 
-<div class="row">
-    @using (@Html.BeginForm("AllNotes", "Notes", FormMethod.Post, new { id = "searchForm" }))
-    {
-        @Html.AntiForgeryToken();
-
-        <div class="input-group" id="adv-search">
-            @Html.TextBoxFor(m => m.search, new { @class = "form-control", @placeholder = "Поиск", @oninput = "AsyncGetNotes()" })
-            <div class="input-group-btn">
-                <div class="btn-group" role="group">
-                    @Html.DropDownListFor(x => x.sortBy, listSorted, new { @class = "btn btn-default", @onchange = "AsyncGetNotes()" })
-                    <button type="button" onclick="AsyncGetNotes()" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
-                </div>
-
-            </div>
-        </div>
-    }
-    <div id="getNotes"></div>
+<div>
+    @Html.Action("SearchPartial", "Notes")
 </div>
 
-<script>
+<div id="getNotes">
+    @Html.Action("GetAllNotes", "Notes")
+</div>
+
+<script type="text/javascript">
     function AsyncGetNotes() {
         $.ajax({
-            url: '@Url.Action("AllNotes", "Notes")',
+            url: '@Url.Action("GetAllNotes", "Notes")',
             type: 'POST',
             cache: false,
             data: $("#searchForm").serializeArray(),

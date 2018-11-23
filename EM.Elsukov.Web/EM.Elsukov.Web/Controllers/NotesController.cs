@@ -18,23 +18,64 @@ namespace EM.Elsukov.Web.Controllers
         {
             notesRep = new NHNoteRepository();
         }
-        [HttpGet]
-        public ActionResult AllNotes()
-        {
-            var m = new SearchModel();
-            return View(m);
-        }
-        [HttpPost]
-        public ActionResult AllNotes(SearchModel searchModel)
-        {
-            IEnumerable<Note> notes = notesRep.LoadLike(searchModel.search, searchModel.sortBy);
-            return PartialView("NoteList", notes);
-        }
+
         [HttpGet]
         public ActionResult MyNotes()
         {
-            IEnumerable<Note> notes = notesRep.LoadByUserLogin(User.Identity.Name);
-            return View("AllNotes", notes);
+            return View();
+        }
+        [HttpGet]
+        public ActionResult AllNotes()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public PartialViewResult SearchPartial()
+        {
+            return PartialView();
+        }
+
+        [HttpGet]
+        public PartialViewResult GetAllNotes()
+        {
+            IEnumerable<Note> notes = notesRep.LoadBySorted("CreateDate");
+            if (notes == null || notes.Count() == 0)
+                return PartialView();
+            return PartialView("AllNoteListPartial", notes);
+        }
+
+        [HttpPost]
+        public PartialViewResult GetAllNotes(SearchModel searchModel)
+        {
+            if (!ModelState.IsValid || (searchModel.search == null & searchModel.sortBy == null))
+                return PartialView(searchModel);
+            var notes = notesRep.LoadLike(searchModel.search, searchModel.sortBy);
+            return PartialView("AllNoteListPartial", notes);
+        }
+
+        [HttpGet]
+        public PartialViewResult GetMyNotes()
+        {
+            IEnumerable<Note> notes = notesRep.LoadByUser(User.Identity.Name, "CreateDate");
+            if (notes == null || notes.Count() == 0)
+                return PartialView();
+            return PartialView("MyNoteListPartial", notes);
+        }
+        [HttpPost]
+        public ActionResult GetMyNotes(SearchModel searchModel)
+        {
+            if (!ModelState.IsValid || (searchModel.search == null & searchModel.sortBy == null))
+                return PartialView(searchModel);
+            var notes = notesRep.LoadLikeByUser(User.Identity.Name, searchModel.search, searchModel.sortBy);
+            return PartialView("MyNoteListPartial", notes);
+        }
+        public ActionResult EditNotePatrial(int id)
+        {
+            var note = notesRep.LoadById(id);
+            if (note != null)
+                return PartialView(note);
+            return HttpNotFound();
         }
     }
 }
