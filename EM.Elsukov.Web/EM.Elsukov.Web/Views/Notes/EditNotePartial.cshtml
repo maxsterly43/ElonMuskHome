@@ -1,0 +1,64 @@
+﻿@model EM.Elsukov.Web.Models.EditNoteModel
+@using EM.Elsukov.DB.Models
+
+@using (Html.BeginForm("EditNotePatrial", "Notes", FormMethod.Post, new { id = "editNoteForm" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                @Html.HiddenFor(m => m.Id)
+                @Html.LabelFor(m => m.Title, new { @class = "modal-title" })
+                <h4 class="modal-title" id="exampleModalLabel">@Model.Title</h4>
+            </div>
+            <div class="modal-body">
+                @Html.LabelFor(t => t.Text, new { @class = "control-label" })
+                @Html.TextAreaFor(t => t.Text, new { @class = "form-control", @rows = "8" })
+                @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+                @Html.ValidationSummary("", new { @class = "text-danger" })
+            </div>
+            <div class="modal-footer">
+                <div class="save-type-cont">
+                    <label>
+                        @Html.RadioButtonFor(m => m.Status, NoteStatus.PUBLISHED)
+                        Опубликовать
+                    </label>
+                    <label>
+                        @Html.RadioButtonFor(m => m.Status, NoteStatus.Draft)
+                        Черновик
+                    </label>
+                </div>
+                <input type="button" value="Сохранить" class="btn btn-primary" id="noteComplited" />
+            </div>
+        </div>
+    </div>
+}
+
+
+<script type="text/javascript">
+
+    var but = document.getElementById("noteComplited");
+    but.addEventListener("click", function (event) {
+        $.ajax({
+            url: '@Url.Action("EditNotePartial", "Notes")',
+            type: 'POST',
+            cache: false,
+            data: $("#editNoteForm").serializeArray(),
+            success: function (response) {
+                $('#modDialog').modal('hide');
+            },
+            error: function (xhr) {
+                if (xhr.status == 400) {
+                    var errors = xhr.responseJSON.errors;
+                    errors.forEach(function (error) {
+                        var summaryUl = $(".validation-summary-valid").find("ul");
+                        summaryUl.empty();
+                        summaryUl.append($("<li>").text(error));
+                    });
+                }
+            }
+        });
+    });
+
+</script>

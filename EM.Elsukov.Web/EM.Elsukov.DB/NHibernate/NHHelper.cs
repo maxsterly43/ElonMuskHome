@@ -12,6 +12,7 @@ namespace EM.Elsukov.DB.NHibernate
 
         static NHibernateHelper()
         {
+            Logger.InitLogger();
             sessionFactory = new Configuration().Configure().BuildSessionFactory();
         }
 

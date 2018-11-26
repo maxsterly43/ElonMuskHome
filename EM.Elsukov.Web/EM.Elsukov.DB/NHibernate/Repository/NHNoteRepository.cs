@@ -1,9 +1,10 @@
-﻿using System;
-using EM.Elsukov.DB.Models;
+﻿using EM.Elsukov.DB.Models;
 using EM.Elsukov.DB.NHibernate.Interfaces;
-using System.Collections.Generic;
+using NHibernate;
 using NHibernate.Criterion;
-using System.Linq;
+using NHibernate.Type;
+using System;
+using System.Collections.Generic;
 
 namespace EM.Elsukov.DB.NHibernate
 {
@@ -18,13 +19,15 @@ namespace EM.Elsukov.DB.NHibernate
             }
         }
 
-        public IEnumerable<Note> LoadBySorted(string filed)
+        public IEnumerable<Note> LoadBySorted(string sort)
         {
             var session = NHibernateHelper.GetCurrentSession();
 
-            var entities = session.CreateCriteria<Note>()
-                .AddOrder(Order.Desc(filed))
-                .List<Note>();
+            var entities = session.QueryOver<Note>()
+                .Where(p => p.Status == NoteStatus.PUBLISHED)
+                .OrderBy(Projections.Property(sort))
+                .Desc.List();
+
 
             NHibernateHelper.CloseSession();
 
@@ -36,31 +39,37 @@ namespace EM.Elsukov.DB.NHibernate
             var session = NHibernateHelper.GetCurrentSession();
 
             var user = session.QueryOver<User>()
-                .And(u => u.Login == login)
-                .SingleOrDefault();
+                 .Where(u => u.Login == login)
+                 .SingleOrDefault();
 
-            var entity = session.CreateCriteria<Note>()
-                .Add(Restrictions.Eq("User", user)).AddOrder(Order.Desc(filedSort))
-                .List<Note>();
+            var notes = session.QueryOver<Note>()
+                .Where(l => l.User == user)
+                .Where(l => l.Status != NoteStatus.DELETED)
+                .OrderBy(Projections.Property(filedSort)).Desc.List();
 
             NHibernateHelper.CloseSession();
 
-            return entity;
+            return notes;
         }
         public IEnumerable<Note> LoadLikeByUser(string login, string search, string sort)
         {
             var session = NHibernateHelper.GetCurrentSession();
 
+            IEnumerable<Note> notes;
+
             var user = session.QueryOver<User>()
-              .And(u => u.Login == login)
+              .Where(u => u.Login == login)
               .SingleOrDefault();
 
-            var notes = session.QueryOver<Note>()
+            var query = session.QueryOver<Note>()
                 .Where(l => l.User == user)
-                .Where(t => t.Title.IsLike(search, MatchMode.Anywhere) || t.Tags.IsLike(search, MatchMode.Anywhere))
-                .OrderBy(Projections.Property(sort))
-                .Desc
-                .List();
+                .Where(l => l.Status != NoteStatus.DELETED)
+                .Where(t => t.Title.IsLike(search, MatchMode.Start) || t.Tags.IsLike(search, MatchMode.Anywhere));
+
+            if (sort == "CreateDate")
+                notes = query.OrderBy(Projections.Property(sort)).Desc.List();
+            else
+                notes = query.OrderBy(Projections.Property(sort)).Asc.List();
 
             NHibernateHelper.CloseSession();
 
@@ -71,15 +80,24 @@ namespace EM.Elsukov.DB.NHibernate
         {
             var session = NHibernateHelper.GetCurrentSession();
 
-            var notes = session.QueryOver<Note>()
-                .Where(p => p.Status == NoteStatus.PUBLISHED)
-                .Where(t => t.Title.IsLike(search, MatchMode.Anywhere) || t.Tags.IsLike(search, MatchMode.Anywhere))
-                .OrderBy(Projections.Property(sort))
-                .Desc
-                .List();
+            IEnumerable<Note> notes;
 
-            NHibernateHelper.CloseSession();
+            var query = session.QueryOver<Note>()
+               .Where(p => p.Status == NoteStatus.PUBLISHED);
 
+            if (search != null)
+                query.Where(t => t.Title.IsLike(search, MatchMode.Start) || t.Tags.IsLike(search, MatchMode.Anywhere));
+
+            if (sort == "Login")
+            {
+                notes = query.JoinQueryOver<User>(c => c.User)
+                    .OrderBy(m => m.Login)
+                    .Asc.List();
+            }
+            else if (sort == "CreateDate")
+                notes = query.OrderBy(Projections.Property(sort)).Desc.List();
+            else
+                notes = query.OrderBy(Projections.Property(sort)).Asc.List();
             return notes;
         }
         public Note LoadById(long id)
@@ -95,11 +113,37 @@ namespace EM.Elsukov.DB.NHibernate
             return entity;
         }
 
-        public void SaveByProc(Note note)
+        public bool SaveByProc(Note note)
+        {
+
+            if (note != null)
+            {
+                var session = NHibernateHelper.GetCurrentSession();
+
+                IQuery query = session.CreateSQLQuery
+                    ("exec CreateNote @Title=:Title, @Text=:Text,  @Tags=:Tags, @UserId=:UserId, @BinaryFile=:BinaryFile, @Status=:Status")
+                       .SetString("Title", note.Title)
+                      .SetString("Text", note.Text)
+                      .SetString("Tags", note.Tags)
+                      .SetInt64("UserId", note.User.Id)
+                      .SetParameter("BinaryFile", note.BinaryFile, TypeFactory.GetBinaryType(((byte[])note.BinaryFile).Length))
+                      .SetInt32("Status", (int)note.Status);
+
+                var complite = query.ExecuteUpdate();
+
+                NHibernateHelper.CloseSession();
+
+                return Convert.ToBoolean(complite);
+            }
+            return false;
+        }
+
+        public void restoreNote(Note note)
         {
             if (note != null)
             {
-                throw new NotImplementedException();
+                note.Status = NoteStatus.Draft;
+                Save(note);
             }
         }
     }

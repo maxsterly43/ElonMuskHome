@@ -4,7 +4,9 @@
 
   <class name="Note" table="Notes">
 
-    <id name="Id"><generator class="native" /></id>
+    <id name="Id">
+      <generator class="native" />
+    </id>
     <property name="Title" />
     <property name="Text" />
     <property name="Tags" />
@@ -12,7 +14,7 @@
     <many-to-one name="User" column="UserId" lazy="false"/>
     <property name="BinaryFile" />
     <property name="Status" />
-    
+
   </class>
 
 </hibernate-mapping>

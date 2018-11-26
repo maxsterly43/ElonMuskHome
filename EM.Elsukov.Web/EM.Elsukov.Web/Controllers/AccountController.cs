@@ -36,6 +36,7 @@ namespace EM.Elsukov.Web.Controllers
             else
             {
                 var user = users.LoadByLogin(loginModel.Login);
+                
 
                 if (user == null || user.Password != loginModel.Password)
                 {

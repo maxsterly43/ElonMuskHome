@@ -19,7 +19,7 @@ namespace EM.Elsukov.DB.NHibernate
             var session = NHibernateHelper.GetCurrentSession();
 
             var entity = session.QueryOver<User>()
-                .And(u => u.Login == login)
+                .Where(u => u.Login == login)
                 .SingleOrDefault();
 
             NHibernateHelper.CloseSession();

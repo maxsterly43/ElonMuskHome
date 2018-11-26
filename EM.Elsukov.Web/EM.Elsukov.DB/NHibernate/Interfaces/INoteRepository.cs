@@ -5,7 +5,7 @@ namespace EM.Elsukov.DB.NHibernate.Interfaces
 {
     public interface INoteRepository
     {
-        IEnumerable<Note> LoadBySorted(string filed);
+        IEnumerable<Note> LoadBySorted(string sort);
 
         IEnumerable<Note> LoadByUser(string login, string filedSort);
 
@@ -15,6 +15,8 @@ namespace EM.Elsukov.DB.NHibernate.Interfaces
 
         Note LoadById(long id);
 
-        void SaveByProc(Note note);
+        bool SaveByProc(Note note);
+
+        void restoreNote(Note note);
     }
 }

@@ -104,6 +104,11 @@
     border-bottom-left-radius: 4px;
 }
 
+.save-type-cont {
+   position:absolute;
+   left:10px;
+}
+
 @media screen and (min-width: 768px) {
     #adv-search {
         width: 500px;
@@ -119,8 +124,7 @@
         }
 }
 
-
-/* Set width on the form input elements since they're 100% wide by default */
 textarea {
-    max-width: 280px;
+    resize: vertical;
 }
+
