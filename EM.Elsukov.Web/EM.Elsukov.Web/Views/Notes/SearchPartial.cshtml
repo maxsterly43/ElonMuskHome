@@ -18,7 +18,7 @@
         @Html.TextBoxFor(m => m.search, new { @class = "form-control", @placeholder = "Поиск", @oninput = "AsyncGetNotes()" })
         <div class="input-group-btn">
             <div class="btn-group" role="group">
-                @Html.DropDownListFor(x => x.sortBy, listSorted, new { @class = "btn btn-default", @onchanged = "AsyncGetNotes()" })
+                @Html.DropDownListFor(x => x.sortBy, listSorted, new { @class = "btn btn-default", @onchange = "AsyncGetNotes()" })
                 <button type="button" onclick="AsyncGetNotes()" class="btn btn-primary"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
             </div>
 
