@@ -9,7 +9,7 @@
         <div class="note">
             @Html.HiddenFor(m =>item.Id)
             <div class="note-header">
-                @Html.ActionLink(" ", "null", null, new { @class = "note-attachment glyphicon glyphicon-paperclip" })
+                @Html.ActionLink(" ", "Download", new { id = item.File?.Id ?? -1 }, new { @class = "note-attachment glyphicon glyphicon-paperclip" })
                 <div class="note-title">@Html.DisplayFor(modelItem => item.Title)</div>
             </div>
             <div class="note-labels">

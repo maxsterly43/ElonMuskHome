@@ -6,7 +6,7 @@ using NHibernate.Type;
 using System;
 using System.Collections.Generic;
 
-namespace EM.Elsukov.DB.NHibernate
+namespace EM.Elsukov.DB.NHibernate.Repository
 {
     public class NHNoteRepository : NHBaseRepository<Note>, INoteRepository
     {
@@ -100,18 +100,6 @@ namespace EM.Elsukov.DB.NHibernate
                 notes = query.OrderBy(Projections.Property(sort)).Asc.List();
             return notes;
         }
-        public Note LoadById(long id)
-        {
-            var session = NHibernateHelper.GetCurrentSession();
-
-            var entity = session.QueryOver<Note>()
-                .And(u => u.Id == id)
-                .SingleOrDefault();
-
-            NHibernateHelper.CloseSession();
-
-            return entity;
-        }
 
         public bool SaveByProc(Note note)
         {
@@ -121,12 +109,12 @@ namespace EM.Elsukov.DB.NHibernate
                 var session = NHibernateHelper.GetCurrentSession();
 
                 IQuery query = session.CreateSQLQuery
-                    ("exec CreateNote @Title=:Title, @Text=:Text,  @Tags=:Tags, @UserId=:UserId, @BinaryFile=:BinaryFile, @Status=:Status")
-                       .SetString("Title", note.Title)
+                    ("exec CreateNote @Title=:Title, @Text=:Text,  @Tags=:Tags, @UserId=:UserId, @FileId=:FileId, @Status=:Status")
+                      .SetString("Title", note.Title)
                       .SetString("Text", note.Text)
                       .SetString("Tags", note.Tags)
                       .SetInt64("UserId", note.User.Id)
-                      .SetParameter("BinaryFile", note.BinaryFile, TypeFactory.GetBinaryType(((byte[])note.BinaryFile).Length))
+                      .SetInt64("FileId", note.File.Id)
                       .SetInt32("Status", (int)note.Status);
 
                 var complite = query.ExecuteUpdate();

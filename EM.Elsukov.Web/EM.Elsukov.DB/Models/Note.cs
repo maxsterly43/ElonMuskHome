@@ -16,7 +16,7 @@ namespace EM.Elsukov.DB.Models
 
         public virtual User User { get; set; }
 
-        public virtual byte[] BinaryFile { get; set; }
+        public virtual File File { get; set; }
 
         public virtual NoteStatus Status { get; set; }
     }

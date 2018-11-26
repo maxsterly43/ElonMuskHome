@@ -12,7 +12,7 @@
     <property name="Tags" />
     <property name="CreateDate" />
     <many-to-one name="User" column="UserId" lazy="false"/>
-    <property name="BinaryFile" />
+    <many-to-one name="File" column="FileId" lazy="false"/>
     <property name="Status" />
 
   </class>

@@ -1,7 +1,7 @@
 ﻿using EM.Elsukov.DB.Models;
 using EM.Elsukov.DB.NHibernate.Interfaces;
 
-namespace EM.Elsukov.DB.NHibernate
+namespace EM.Elsukov.DB.NHibernate.Repository
 {
     public class NHUserRepository : NHBaseRepository<User>, IUserRepository
     {

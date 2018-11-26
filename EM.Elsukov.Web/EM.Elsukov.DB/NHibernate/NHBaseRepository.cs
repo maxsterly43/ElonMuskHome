@@ -47,13 +47,15 @@ namespace EM.Elsukov.DB.NHibernate
 
         public virtual T Load(long id)
         {
-            ISession session = NHibernateHelper.GetCurrentSession();
+            var session = NHibernateHelper.GetCurrentSession();
 
-            var user = session.Load<T>(id);
+            var entity = session.QueryOver<T>()
+                .Where(u => u.Id == id)
+                .SingleOrDefault();
 
             NHibernateHelper.CloseSession();
 
-            return user;
+            return entity;
         }
 
         public virtual void Save(T entity)

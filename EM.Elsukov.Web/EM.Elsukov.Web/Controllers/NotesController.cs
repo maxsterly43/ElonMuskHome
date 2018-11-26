@@ -1,5 +1,6 @@
 ﻿using EM.Elsukov.DB.Models;
 using EM.Elsukov.DB.NHibernate;
+using EM.Elsukov.DB.NHibernate.Repository;
 using EM.Elsukov.Web.Models;
 using System;
 using System.Collections.Generic;
@@ -17,10 +18,12 @@ namespace EM.Elsukov.Web.Controllers
     {
         NHNoteRepository notesRep;
         NHUserRepository usersRep;
+        NHFileRepository filesRep;
         public NotesController()
         {
             notesRep = new NHNoteRepository();
             usersRep = new NHUserRepository();
+            filesRep = new NHFileRepository();
         }
 
         [HttpGet]
@@ -84,7 +87,7 @@ namespace EM.Elsukov.Web.Controllers
         [HttpGet]
         public ActionResult EditNotePartial(long id)
         {
-            var note = notesRep.LoadById(id);
+            var note = notesRep.Load(id);
             if (note == null || note.User.Login != User.Identity.Name)
                 return HttpNotFound();
             var editNoteModel = new EditNoteModel()
@@ -108,7 +111,7 @@ namespace EM.Elsukov.Web.Controllers
                     .Select(e => e.ErrorMessage).ToList();
                 return Json(new { errors = errors });
             }
-            var note = notesRep.LoadById(editNote.Id);
+            var note = notesRep.Load(editNote.Id);
             if (note == null || note.User.Login != User.Identity.Name)
                 return Json(new { errors = new List<string>() { { "Заметка не найдена" } } });
 
@@ -124,7 +127,7 @@ namespace EM.Elsukov.Web.Controllers
         [HttpGet]
         public bool deleteNote(long id)
         {
-            var note = notesRep.LoadById(id);
+            var note = notesRep.Load(id);
             if (note == null || note.User.Login != User.Identity.Name)
                 return false;
             notesRep.Delete(note);
@@ -133,7 +136,7 @@ namespace EM.Elsukov.Web.Controllers
         [HttpGet]
         public bool restoreNote(long id)
         {
-            var note = notesRep.LoadById(id);
+            var note = notesRep.Load(id);
             if (note == null || note.User.Login != User.Identity.Name)
                 return false;
             notesRep.restoreNote(note);
@@ -163,10 +166,24 @@ namespace EM.Elsukov.Web.Controllers
                 return PartialView(createNoteModel);
             }
 
+            var postedFile = createNoteModel.File;
 
-            var postedFile = new MemoryPostedFile(createNoteModel.File.InputStream, createNoteModel.File.FileName,createNoteModel.File.ContentType);
+            DB.Models.File file = null;
 
-            var uploadedFile = ToByteArray(postedFile);
+            if (postedFile != null)
+            {
+
+                string filename = Path.GetFileName(postedFile.FileName);
+                string path = Server.MapPath("~/Files/" + filename);
+                postedFile.SaveAs(Server.MapPath("~/Files/" + filename));
+
+                file = new DB.Models.File
+                {
+                    Name = postedFile.FileName,
+                    ContentType = postedFile.ContentType,
+                    Path = path
+                };
+            }
 
             Note note = new Note()
             {
@@ -175,7 +192,7 @@ namespace EM.Elsukov.Web.Controllers
                 Tags = createNoteModel.Tags,
                 Status = (NoteStatus)createNoteModel.Status,
                 User = user,
-                BinaryFile = uploadedFile
+                File = file
             };
 
             if (notesRep.SaveByProc(note))
@@ -185,67 +202,12 @@ namespace EM.Elsukov.Web.Controllers
         }
 
         [HttpGet]
-        public FileResult Download(int id)
+        public ActionResult Download(long id)
         {
-            var note = notesRep.LoadById(id);
-            MemoryPostedFile objFile = FromByteArray<MemoryPostedFile>(note.BinaryFile);
-            return new FileContentResult(objFile.InputStream, objFile.ContentType);          
-        }
-
-        public byte[] ToByteArray<T>(T obj)
-        {
-            if (obj == null)
-                return null;
-            BinaryFormatter bf = new BinaryFormatter();
-            using (MemoryStream ms = new MemoryStream())
-            {
-                bf.Serialize(ms, obj);
-                return ms.ToArray();
-            }
-        }
-
-        public T FromByteArray<T>(byte[] data)
-        {
-            if (data == null)
-                return default(T);
-            BinaryFormatter bf = new BinaryFormatter();
-            using (MemoryStream ms = new MemoryStream(data))
-            {
-                object obj = bf.Deserialize(ms);
-                return (T)obj;
-            }
-        }
-    }
-
-    [Serializable]
-    public class MemoryPostedFile
-    {
-        public long ContentLength => InputStream.Length;
-
-        public string FileName { get; }
-
-        public string ContentType { get; }
-
-        public byte[] InputStream { get; }
-
-        public MemoryPostedFile(Stream InputStream, string fileName = null, string ContentType = null)
-        {
-            this.InputStream = ReadFully(InputStream); 
-            this.FileName = fileName;
-            this.ContentType = ContentType;
-        }
-        public static byte[] ReadFully(Stream input)
-        {
-            byte[] buffer = new byte[16 * 1024];
-            using (MemoryStream ms = new MemoryStream())
-            {
-                int read;
-                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
-                {
-                    ms.Write(buffer, 0, read);
-                }
-                return ms.ToArray();
-            }
+            var file = filesRep.Load(id);
+            if (file != null)
+                return File(file.Path, file.ContentType, file.Name);
+            return PartialView("FileNotFoundPartial");
         }
     }
 }

@@ -1,6 +1,7 @@
 ﻿
 using EM.Elsukov.DB.NHibernate;
 using EM.Elsukov.DB.NHibernate.Interfaces;
+using EM.Elsukov.DB.NHibernate.Repository;
 using EM.Elsukov.Web.Models;
 using System.Web.Mvc;
 using System.Web.Security;

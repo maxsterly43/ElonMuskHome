@@ -65,6 +65,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Models\File.cs" />
     <Compile Include="Models\IEntity.cs" />
     <Compile Include="Models\Note.cs" />
     <Compile Include="Models\User.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="NHibernate\Interfaces\IUserRepository.cs" />
     <Compile Include="NHibernate\NHBaseRepository.cs" />
     <Compile Include="NHibernate\NHHelper.cs" />
+    <Compile Include="NHibernate\Repository\NHFileRepository.cs" />
     <Compile Include="NHibernate\Repository\NHNoteRepository.cs" />
     <Compile Include="NHibernate\Repository\NHUserRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -89,6 +91,9 @@
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Mapping\File.hbm.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

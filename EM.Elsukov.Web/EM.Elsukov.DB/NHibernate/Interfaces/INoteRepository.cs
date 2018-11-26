@@ -13,8 +13,6 @@ namespace EM.Elsukov.DB.NHibernate.Interfaces
 
         IEnumerable<Note> LoadLikeByUser(string login, string search, string sort);
 
-        Note LoadById(long id);
-
         bool SaveByProc(Note note);
 
         void restoreNote(Note note);
