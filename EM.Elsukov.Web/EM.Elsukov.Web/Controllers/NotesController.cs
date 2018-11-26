@@ -163,12 +163,10 @@ namespace EM.Elsukov.Web.Controllers
                 return PartialView(createNoteModel);
             }
 
-            byte[] bytess = new byte[createNoteModel.File.InputStream.Length];
-            createNoteModel.File.InputStream.Read(bytess, 0, bytess.Length);
 
-            var postedFile = new MemoryPostedFile(bytess, createNoteModel.File.FileName,createNoteModel.File.ContentType);
+            var postedFile = new MemoryPostedFile(createNoteModel.File.InputStream, createNoteModel.File.FileName,createNoteModel.File.ContentType);
 
-            var uploadedFile = ObjectToByteArray(postedFile);
+            var uploadedFile = ToByteArray(postedFile);
 
             Note note = new Note()
             {
@@ -190,47 +188,64 @@ namespace EM.Elsukov.Web.Controllers
         public FileResult Download(int id)
         {
             var note = notesRep.LoadById(id);
-            MemoryPostedFile objFile = (MemoryPostedFile)ByteArrayToObject(note.BinaryFile);
-
-            return new FileContentResult(objFile.fileBytes, objFile.ContentType);
+            MemoryPostedFile objFile = FromByteArray<MemoryPostedFile>(note.BinaryFile);
+            return new FileContentResult(objFile.InputStream, objFile.ContentType);          
         }
 
-        private byte[] ObjectToByteArray(HttpPostedFileBase File)
+        public byte[] ToByteArray<T>(T obj)
         {
-            MemoryStream target = new MemoryStream();
-            File.InputStream.CopyTo(target);
-            return target.ToArray();
+            if (obj == null)
+                return null;
+            BinaryFormatter bf = new BinaryFormatter();
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bf.Serialize(ms, obj);
+                return ms.ToArray();
+            }
         }
-        private Object ByteArrayToObject(byte[] arrBytes)
-        {
-            MemoryStream memStream = new MemoryStream();
-            BinaryFormatter binForm = new BinaryFormatter();
-            memStream.Write(arrBytes, 0, arrBytes.Length);
-            memStream.Seek(0, SeekOrigin.Begin);
-            Object obj = (Object)binForm.Deserialize(memStream);
 
-            return obj;
+        public T FromByteArray<T>(byte[] data)
+        {
+            if (data == null)
+                return default(T);
+            BinaryFormatter bf = new BinaryFormatter();
+            using (MemoryStream ms = new MemoryStream(data))
+            {
+                object obj = bf.Deserialize(ms);
+                return (T)obj;
+            }
         }
     }
 
-    public class MemoryPostedFile : HttpPostedFileBase
+    [Serializable]
+    public class MemoryPostedFile
     {
-        public byte[] fileBytes { get; }
+        public long ContentLength => InputStream.Length;
 
-        public MemoryPostedFile(byte[] fileBytes, string fileName = null, string ContentType = null)
+        public string FileName { get; }
+
+        public string ContentType { get; }
+
+        public byte[] InputStream { get; }
+
+        public MemoryPostedFile(Stream InputStream, string fileName = null, string ContentType = null)
         {
-            this.fileBytes = fileBytes;
+            this.InputStream = ReadFully(InputStream); 
             this.FileName = fileName;
             this.ContentType = ContentType;
-            this.InputStream = new MemoryStream(fileBytes);
         }
-
-        public override int ContentLength => fileBytes.Length;
-
-        public override string FileName { get; }
-
-        public override string ContentType { get; }
-
-        public override Stream InputStream { get; }
+        public static byte[] ReadFully(Stream input)
+        {
+            byte[] buffer = new byte[16 * 1024];
+            using (MemoryStream ms = new MemoryStream())
+            {
+                int read;
+                while ((read = input.Read(buffer, 0, buffer.Length)) > 0)
+                {
+                    ms.Write(buffer, 0, read);
+                }
+                return ms.ToArray();
+            }
+        }
     }
 }
