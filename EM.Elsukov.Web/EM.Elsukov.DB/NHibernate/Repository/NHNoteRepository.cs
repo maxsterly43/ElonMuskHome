@@ -114,7 +114,7 @@ namespace EM.Elsukov.DB.NHibernate.Repository
                       .SetString("Text", note.Text)
                       .SetString("Tags", note.Tags)
                       .SetInt64("UserId", note.User.Id)
-                      .SetInt64("FileId", note.File.Id)
+                      .SetParameter("FileId", note.File?.Id ?? null)
                       .SetInt32("Status", (int)note.Status);
 
                 var complite = query.ExecuteUpdate();
