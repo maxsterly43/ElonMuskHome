@@ -1,0 +1,130 @@
+﻿body {
+    padding-top: 70px;
+    padding-bottom: 20px;
+    background-color: #fafafa;
+}
+
+/* Set padding to keep content from hitting the edges */
+.body-content {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* Override the default bootstrap behavior where horizontal description lists 
+   will truncate terms that are too long to fit in the left column 
+*/
+.dl-horizontal dt {
+    white-space: normal;
+}
+
+
+.notes {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.note {
+    flex-direction: column;
+    display: flex;
+    width: calc(25% - 20px);
+    background-color: #fff;
+    box-shadow: 1px 1px 6px #00000050;
+    border-radius: 4px;
+    margin: 10px;
+    min-width: 200px;
+}
+
+
+.note-title {
+    padding: 5px 10px;
+    word-wrap: break-word;
+}
+
+.note-labels {
+    padding: 10px;
+}
+
+.note-info {
+    display: flex;
+    background-color: #f5f5f5;
+    border-top: 1px solid #eee;
+}
+
+    .note-info * {
+        flex: auto;
+        padding: 4px;
+    }
+
+.note-attachment {
+    float: right;
+    background-color: #f5f5f5;
+    margin-right: 5px;
+    margin-top: 5px;
+    margin-left: 5px;
+    padding: 5px 5px;
+    border-radius: 4px;
+}
+
+.note-header {
+    flex: 1;
+}
+
+.dropdown.dropdown-lg .dropdown-menu {
+    margin-top: -1px;
+    padding: 6px 20px;
+}
+
+.input-group-btn .btn-group {
+    display: flex !important;
+}
+
+.btn-group .btn {
+    border-radius: 0;
+    margin-left: -1px;
+}
+
+    .btn-group .btn:last-child {
+        border-top-right-radius: 4px;
+        border-bottom-right-radius: 4px;
+    }
+
+.btn-group .form-horizontal .btn[type="submit"] {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.form-horizontal .form-group {
+    margin-left: 0;
+    margin-right: 0;
+}
+
+.form-group .form-control:last-child {
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+}
+
+.save-type-cont {
+   position:absolute;
+   left:10px;
+}
+
+@media screen and (min-width: 768px) {
+    #adv-search {
+        width: 500px;
+        margin: 0 auto;
+    }
+
+    .dropdown.dropdown-lg {
+        position: static !important;
+    }
+
+        .dropdown.dropdown-lg .dropdown-menu {
+            min-width: 500px;
+        }
+}
+
+textarea {
+    resize: vertical;
+}
+

@@ -1,0 +1,83 @@
+﻿@model EM.Elsukov.Web.Models.CreateNoteModel
+@using EM.Elsukov.DB.Models
+
+@using (Html.BeginForm("EditNotePatrial", "Notes", FormMethod.Post, new { id = "createNoteForm", enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+    <div class="modal-dialog" role="document">
+
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="exampleModalLabel">Cоздание заметки</h4>
+            </div>
+
+            <div class="modal-body">
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Title, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Title, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Title, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Text, htmlAttributes: new { @class = "control-label" })
+                    @Html.TextAreaFor(model => model.Text, new { @class = "form-control", @rows = "8" })
+                    @Html.ValidationMessageFor(model => model.Text, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Tags, htmlAttributes: new { @class = "control-label" })
+                    @Html.EditorFor(model => model.Tags, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Tags, "", new { @class = "text-danger" })
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(x => x.File)
+                    @Html.TextBoxFor(x => x.File, new { type = "file", id = "myFile" })
+                    @Html.ValidationMessageFor(x => x.File)
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <div class="save-type-cont">
+                    <label>
+                        @Html.RadioButtonFor(m => m.Status, NoteStatus.PUBLISHED)
+                        Опубликовать
+                    </label>
+                    <label>
+                        @Html.RadioButtonFor(m => m.Status, NoteStatus.Draft)
+                        Черновик
+                    </label>
+                    @Html.ValidationMessageFor(model => model.Status, "", new { @class = "text-danger" })
+                </div>
+
+                <input type="button" value="Сохранить" class="btn btn-primary" id="noteCreateComplited" />
+            </div>
+        </div>
+
+    </div>
+}
+
+
+<script type="text/javascript">
+
+
+    var but = document.getElementById("noteCreateComplited");
+        but.addEventListener("click", function (event) {
+            var formdata = new FormData($('#createNoteForm').get(0));
+
+        $.ajax({
+            url: '@Url.Action("CreateNotePartial", "Notes")',
+            type: 'POST',
+            cache: false,
+            data: formdata,
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                $('#modDialogCreate').modal('hide');
+            },
+            error: function (result) {
+                console.log(result.responseText);
+                $('#dialogContentCreate').html(result.responseText);
+            }
+        });
+    });
+
+</script>

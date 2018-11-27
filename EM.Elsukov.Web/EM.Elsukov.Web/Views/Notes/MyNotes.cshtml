@@ -1,0 +1,46 @@
+﻿@{
+    ViewBag.Title = "Мои заметки";
+}
+
+<div id="modDialogCreate" class="modal fade">
+    <div id="dialogContentCreate" class="modal-dialog"></div>
+</div>
+
+<div>
+    @Html.Action("SearchPartial", "Notes")
+</div>
+
+
+<div>
+    @Html.ActionLink("Создать новую заметку", "CreateNotePartial", null, new { @id = "createNote" })
+</div>
+
+<div id="getNotes">
+    @Html.Action("GetMyNotes", "Notes")
+</div>
+
+<script type="text/javascript">
+    function AsyncGetNotes() {
+        $.ajax({
+            url: '@Url.Action("GetMyNotes", "Notes")',
+            type: 'POST',
+            cache: false,
+            data: $("#searchForm").serializeArray(),
+            success: function (result) {
+                $("#getNotes").html(result)
+            }
+        });
+    }
+
+    $(function () {
+        $.ajaxSetup({ cache: false });
+        $("#createNote").click(function (e) {
+            e.preventDefault();
+            $.get(this.href, function (data) {
+                $('#dialogContentCreate').html(data);
+                $('#modDialogCreate').modal('show');
+            });
+        });
+    })
+</script>
+

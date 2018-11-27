@@ -1,0 +1,25 @@
+﻿@{
+    ViewBag.Title = "Все заметки";
+}
+
+<div>
+    @Html.Action("SearchPartial", "Notes")
+</div>
+
+<div id="getNotes">
+    @Html.Action("GetAllNotes", "Notes")
+</div>
+
+<script type="text/javascript">
+    function AsyncGetNotes() {
+        $.ajax({
+            url: '@Url.Action("GetAllNotes", "Notes")',
+            type: 'POST',
+            cache: false,
+            data: $("#searchForm").serializeArray(),
+            success: function (result) {
+                $("#getNotes").html(result)
+            }
+        });
+    }
+</script>

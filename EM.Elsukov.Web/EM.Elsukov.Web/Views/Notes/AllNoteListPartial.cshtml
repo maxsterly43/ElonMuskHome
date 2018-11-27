@@ -1,0 +1,38 @@
+﻿@model IEnumerable<EM.Elsukov.DB.Models.Note>
+
+@{
+    Layout = null;
+}
+<div class="notes">
+    @foreach (var item in Model)
+    {
+        <div class="note">
+            @Html.HiddenFor(m =>item.Id)
+            <div class="note-header">
+                @Html.ActionLink(" ", "Download", new { id = item.File?.Id ?? -1 }, new { @class = "note-attachment glyphicon glyphicon-paperclip" })
+                <div class="note-title">@Html.DisplayFor(modelItem => item.Title)</div>
+            </div>
+            <div class="note-labels">
+                @{
+                    var tags = item.Tags.Split(new char[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var tag in tags)
+                    {
+                        <span class="label label-info">@tag</span>
+                    }
+                }
+            </div>
+            <div class="note-info">
+                <span class="text-center">@item.CreateDate.ToString("dd/MM/yy hh:mm")</span>
+                @Html.ActionLink(item.User.Login, "AllNotes", null, new { @class = "text-center" })
+            </div>
+        </div>
+     }
+
+</div>
+
+<script type="text/javascript">
+    $("#getNotes").hide();
+    $(".note").hide();
+    $(".note").fadeIn(600);
+    $("#getNotes").show(225);
+</script>
