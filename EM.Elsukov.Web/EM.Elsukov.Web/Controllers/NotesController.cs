@@ -183,7 +183,10 @@ namespace EM.Elsukov.Web.Controllers
                     ContentType = postedFile.ContentType,
                     Path = path
                 };
+
+                filesRep.Save(file);
             }
+        
 
             Note note = new Note()
             {
