@@ -9,6 +9,7 @@ using System.Linq;
 using System.Net;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Web;
+using System.Web.Hosting;
 using System.Web.Mvc;
 
 namespace EM.Elsukov.Web.Controllers
@@ -172,10 +173,9 @@ namespace EM.Elsukov.Web.Controllers
 
             if (postedFile != null)
             {
-
                 string filename = Path.GetFileName(postedFile.FileName);
-                string path = Server.MapPath("~/Files/" + filename);
-                postedFile.SaveAs(Server.MapPath("~/Files/" + filename));
+                string path = "~/App_Data/Files/" + filename;
+                postedFile.SaveAs(HostingEnvironment.MapPath(path));
 
                 file = new DB.Models.File
                 {
@@ -186,7 +186,6 @@ namespace EM.Elsukov.Web.Controllers
 
                 filesRep.Save(file);
             }
-        
 
             Note note = new Note()
             {
@@ -209,7 +208,10 @@ namespace EM.Elsukov.Web.Controllers
         {
             var file = filesRep.Load(id);
             if (file != null)
-                return File(file.Path, file.ContentType, file.Name);
+            {
+                string path = HostingEnvironment.MapPath(file.Path);
+                return File(path, file.ContentType, file.Name);
+            }
             return PartialView("FileNotFoundPartial");
         }
     }
